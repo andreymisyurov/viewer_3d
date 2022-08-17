@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QOpenGLWidget>
 #include <QTimer>
+#include <QMouseEvent>
 
 class Widget : public QOpenGLWidget
 {
@@ -13,16 +14,17 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
-public slots:
-    void changeZ();
-
 protected:
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
 
 private:
-    float z = 0;
+    float xRot, yRot, zRot;
+    QPoint mPos;
     QTimer tmr;
+    void drowCube(float a);
+    void mousePressEvent(QMouseEvent*) override;
+    void mouseMoveEvent(QMouseEvent*) override;
 };
 #endif // WIDGET_H

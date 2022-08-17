@@ -5,9 +5,6 @@ Widget::Widget(QWidget *parent)
 {
     setWindowTitle("Education");
     setGeometry(400,200,800,600);
-
-    connect(&tmr, SIGNAL(timeout()), this, SLOT(changeZ()));
-    tmr.start(100);
 }
 
 Widget::~Widget()
@@ -15,58 +12,64 @@ Widget::~Widget()
 }
 
 void Widget::initializeGL() {
-
+    glEnable(GL_DEPTH_TEST);
 }
 
 void Widget::resizeGL(int w, int h) {
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    //    glOrtho(-1,1,-1,1,1,2);
-    glFrustum(-1,1,-1,1,1,2);
-
+    glFrustum(-1,1,-1,1,1,3);
 }
 
-// массив с вершинами
-float arr[] = {0,0, -1.5, 1,0, -1.5, 0,1, -1.5};
-
 void Widget::paintGL() {
-    glClearColor(0, 1, 1, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BITS);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslated(0, 0, z);
 
-    //вызываем функцию вертекс поинтер
-    // сколько переменных на одну вершину
-    // тип
-    // смещение
-    // адресс массива
-    glVertexPointer(3, GL_FLOAT, 0, &arr);
+    glTranslatef(0,0,-2);
+    glRotatef(xRot, 1, 0, 0);
+    glRotatef(yRot, 0, 1, 0);
 
-    // разрешаем использовать вершинный буфер
-    glEnableClientState(GL_VERTEX_ARRAY);
-    //  добавляем цвет треугольника
-    glColor3b(1,0,0);
-    // рисуем треугольники, первый эл = 0, всего вершин 3
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    // запрещаем использовать вершинный буфер
-    glDisableClientState(GL_VERTEX_ARRAY);
-
+    drowCube(0.5);
 }
 
-void Widget::changeZ(){
-    z -= 0.01;
+
+void Widget::drowCube(float a){
+    float arr[] = {-a,-a,a, a,-a,a, a,a,a, -a,a,a,
+                   a,-a,-a, -a,-a,-a, -a,a,-a, a,a,-a,
+                   -a,-a,-a, -a,-a,a, -a,a,a, -a,a,-a,
+                   a,-a,a, a,-a,-a, a,a,-a, a,a,a,
+                   -a,-a,a, a,-a,a, a,-a,-a, -a,-a,-a,
+                   -a,a,a, a,a,a, a,a,-a, -a,a,-a,};
+
+    float color[] = {
+        1,0,0, 1,0,0, 1,0,0, 1,0,0,
+        0,0,1, 0,0,1, 0,0,1, 0,0,1,
+        1,1,0, 1,1,0, 1,1,0, 1,1,0,
+        0,1,1, 0,1,1, 0,1,1, 0,1,1,
+        1,0,1, 1,0,1, 1,0,1, 1,0,1,
+        1,0.5,0.5, 1,0.5,0.5, 1,0.5,0.5, 1,0.5,0.5
+    };
+
+    glVertexPointer(3, GL_FLOAT, 0, &arr);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glColorPointer(3, GL_FLOAT, 0, &color);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glDrawArrays(GL_QUADS, 0, 24);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void Widget::mousePressEvent(QMouseEvent* mo){
+    mPos = mo->pos();
+}
+
+void Widget::mouseMoveEvent(QMouseEvent* mo) {
+    xRot = 1 / M_PI * (mo->pos().y() - mPos.y());
+    yRot = 1 / M_PI * (mo->pos().x() - mPos.x());
     update();
 }
-
-
-
-
-
-
-
-
 
