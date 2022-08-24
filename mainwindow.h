@@ -6,7 +6,7 @@
 #include <QOpenGLWidget>
 #include <QFileDialog>
 
-#include "glwidget.h"
+#include "./model/glwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

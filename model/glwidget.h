@@ -5,6 +5,8 @@
 #include <QOpenGLWidget>
 #include <QVector3D>
 #include <QWidget>
+#include <QMouseEvent>
+#include <QTimer>
 
 #include "parser.cpp"
 
@@ -46,6 +48,9 @@ protected:
     auto resizeGL(int w, int h) -> void override;
     auto paintGL() -> void override;
 
+    void mousePressEvent(QMouseEvent*) override;
+    void mouseMoveEvent(QMouseEvent*) override;
+
 private:
     auto m_build() -> void;
     auto m_draw() -> void;
@@ -63,7 +68,6 @@ private:
     float m_zRotate = 0.0;
     float m_scale = 1.0;
 
-//    Parser m_parser;
     float* m_verteres = nullptr;
     GLuint* m_indexes = nullptr;
 
@@ -71,5 +75,8 @@ private:
 
     size_t m_counter = 0;
     char* m_line = NULL;
+
+    QPoint mPos;
+    QTimer tmr;
 };
 #endif  // WIDGET_H

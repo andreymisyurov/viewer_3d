@@ -147,3 +147,41 @@ auto Widget::setData(MomentoData data) -> void {
   m_zRotate = data.m_zRotate;
   m_scale = data.m_scale;
 }
+
+auto Widget::mousePressEvent(QMouseEvent* mo) -> void {
+    mPos = mo->pos();
+}
+
+auto Widget::mouseMoveEvent(QMouseEvent* mo) -> void {
+    m_xRotate = 1 / M_PI * (mo->pos().y() - mPos.y());
+    m_yRotate = 1 / M_PI * (mo->pos().x() - mPos.x());
+    update();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
